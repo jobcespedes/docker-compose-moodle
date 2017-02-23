@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  # Servicio de postgres:
+  postgres:
+    image: postgres:9.3
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+        POSTGRES_DB: moodle
+        POSTGRES_USER: metics
+        POSTGRES_PASSWORD: devpass
+        
+volumes:
+  postgres-data:
