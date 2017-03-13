@@ -1,22 +1,95 @@
-version: '3'
+version: '2.1'
 
 services:
+  # Aplicación
+  app:
+    image: tianon/true
+    volumes:
+      - ./${REPO_FOLDER}:${DOCUMENT_ROOT}
+      - ./moodledata:${MOODLE_DATA}
+
   # Servicio de postgres:
   postgres:
-    image: "postgres:9.3-${PG_LOCALE}"
+    image: "metics/postgres:9.3-${PG_LOCALE}"
     build:
-      context: ./Postgres
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: postgres/Dockerfile
       args:
         locale: "${PG_LOCALE}"
+    expose:
+      - "${PG_PORT}"
     ports:
       - "${PG_PORT}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./db_dumps:/opt/db_dumps
     environment:
-        POSTGRES_DB: "${POSTGRES_DB}"
-        POSTGRES_USER: "${POSTGRES_USER}"
-        POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    depends_on:
+      - app
+
+  # Servicio de PHP-FPM
+  php-fpm:
+    image: "metics/php-fpm:5.6"
+    build:
+      context: .
+      dockerfile: php-fpm/Dockerfile
+    volumes_from:
+      - app
+    expose:
+      - "${PHP_SOCKET}"
+    extra_hosts:
+      - "dockerhost:${HOST_IP}"
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+  # Servicio de Apache2
+  apache2:
+    image: metics/apache2:2.4
+    build:
+      context: .
+      dockerfile: apache2/Dockerfile
+      args:
+        DOCUMENT_ROOT: ${DOCUMENT_ROOT}
+        PHP_SOCKET: php-fpm:${PHP_SOCKET}
+        ALIAS_DOMAIN: ${ALIAS_DOMAIN}
+    volumes_from:
+      - app
+    ports:
+      - "${WWW_PORT}:80"
+    links:
+      - php-fpm
+      - postgres
+    depends_on:
+      - php-fpm
+
+  # Cron para moodle
+  cron:
+    image: metics/php-fpm:5.6-cron
+    build:
+      context: .
+      dockerfile: cron/Dockerfile
+      args:
+        DOCUMENT_ROOT: ${DOCUMENT_ROOT}
+    volumes_from:
+      - app
+    depends_on:
+      - apache2
+
+ # Gestor de base de datos
+  pgadmin:
+    image: "fenglc/pgadmin4"
+    ports:
+      - "5050:5050"
+    links:
+      - postgres
+    depends_on:
+      - postgres
 
 volumes:
   postgres-data:
+    driver: "local"

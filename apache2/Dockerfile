@@ -1,0 +1,40 @@
+FROM webdevops/apache:debian-8
+LABEL Description="Esta imagen sirve para la configuración de apache para moodle" Version="1.0"
+
+ARG PHP_SOCKET=php-fpm:9000
+ARG DOCUMENT_ROOT=/var/www/html
+ARG ALIAS_DOMAIN=*.vm
+
+ENV WEB_PHP_SOCKET=$PHP_SOCKET
+ENV WEB_DOCUMENT_ROOT=$DOCUMENT_ROOT
+ENV WEB_ALIAS_DOMAIN=$ALIAS_DOMAIN
+
+RUN apt-get update && \
+    # Adicionales \
+    apt-get install -y graphviz clamav clamav-daemon zip unzip aspell-es
+
+# Config
+RUN rm -rf /etc/apache2/mods-enabled/* && \
+    # Webdevops \
+    a2enmod actions proxy proxy_fcgi mpm_event ssl && \
+    # Moodle \
+    a2enmod actions alias authz_host autoindex cache cgid deflate dir expires headers mime rewrite
+
+# TZ
+RUN echo "America/Costa_Rica" > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata
+
+# Limpieza
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/apt/*
+
+COPY ./config/conf_moodle.sh /opt/docker/bin/conf_moodle.sh
+
+WORKDIR $WEB_DOCUMENT_ROOT
+
+EXPOSE 80
+
+ENTRYPOINT ["/opt/docker/bin/entrypoint.sh"]
+
+CMD ["supervisord"]
