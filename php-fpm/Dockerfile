@@ -5,6 +5,7 @@ ARG DOCUMENT_ROOT=/var/www/html
 
 ENV WEB_DOCUMENT_ROOT=$DOCUMENT_ROOT
 
+# PHP
 RUN apt-get update && \
     # Bug https://github.com/docker-library/php/issues/133 \
     apt-get install -y --no-install-recommends php5-xdebug && \
@@ -21,6 +22,9 @@ RUN apt-get update && \
     # Ya están instalados curl iconv mbstring openssl tokenizer ctype simplexml spl pcre dom xml json  \
     docker-php-ext-install soap zip intl pspell pgsql && \
     docker-php-ext-configure opcache --enable-opcache && docker-php-ext-install opcache
+
+# Adicionales
+RUN apt-get install -y graphviz clamav clamav-daemon zip unzip aspell-es
 
 # Config
 COPY config/conf_php.ini /usr/local/etc/php/conf.d/php.ini

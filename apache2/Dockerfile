@@ -9,10 +9,6 @@ ENV WEB_PHP_SOCKET=$PHP_SOCKET
 ENV WEB_DOCUMENT_ROOT=$DOCUMENT_ROOT
 ENV WEB_ALIAS_DOMAIN=$ALIAS_DOMAIN
 
-RUN apt-get update && \
-    # Adicionales \
-    apt-get install -y graphviz clamav clamav-daemon zip unzip aspell-es
-
 # Config
 RUN rm -rf /etc/apache2/mods-enabled/* && \
     # Webdevops \
@@ -23,11 +19,6 @@ RUN rm -rf /etc/apache2/mods-enabled/* && \
 # TZ
 RUN echo "America/Costa_Rica" > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata
-
-# Limpieza
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /var/cache/apt/*
 
 COPY ./config/conf_moodle.sh /opt/docker/bin/conf_moodle.sh
 
