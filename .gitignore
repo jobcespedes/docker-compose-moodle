@@ -1,4 +1,4 @@
-/html/*
+/html/
 /moodledata/*
 !/moodledata/README.md
 /db_dumps/*
