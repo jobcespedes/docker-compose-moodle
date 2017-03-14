@@ -2,8 +2,10 @@ FROM php:5-fpm
 LABEL Description="Esta imagen sirve para la configuración de php-fpm para moodle" Version="1.0"
 
 ARG DOCUMENT_ROOT=/var/www/html
+ARG MY_TZ=America/Costa_Rica
 
 ENV WEB_DOCUMENT_ROOT=$DOCUMENT_ROOT
+ENV WEB_MY_TZ=${MY_TZ}
 
 # PHP
 RUN apt-get update && \
@@ -32,8 +34,9 @@ COPY config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY config/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # TZ
-RUN echo "America/Costa_Rica" > /etc/timezone && \
-    dpkg-reconfigure -f noninteractive tzdata
+RUN echo "${WEB_MY_TZ}" > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    sed -i  "s@MY_TZ_WILL_BE_REPLACE@${WEB_MY_TZ}@" /usr/local/etc/php/conf.d/xdebug.ini    
 
 # Limpieza
 RUN apt-get clean && \
