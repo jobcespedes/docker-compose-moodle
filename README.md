@@ -10,15 +10,15 @@ docker-compose-moodle es un repositorio para crear rápidamente un entorno de tr
 ## Pasos rápidos para crear proyecto:
 1. Tener Docker. Ver como instalar [_Docker_](#markdown-header-instalar-docker) en Ubuntu
 2. Tener Docker Compose. Ver como instalar [_Docker Compose_](#markdown-header-instalar-docker-compose) en Ubuntu
-3. Descargar este repo y acceder a él: ``` bash git clone https://jobcespedes@bitbucket.org/jobcespedes/docker-compose-moodle.git```
-4. Copiar repositorio de código de Moodle: ``` bash git clone -b moodle_27_dev_bbb https://soporte-metics@bitbucket.org/metics/nube-moodle.git html```
+3. Descargar este repo y acceder a él: ```git clone https://jobcespedes@bitbucket.org/jobcespedes/docker-compose-moodle.git```
+4. Copiar repositorio de código de Moodle: ```git clone -b moodle_27_dev_bbb https://soporte-metics@bitbucket.org/metics/nube-moodle.git html```
 5. Poner archivo de respaldo (**dump-init.sql.gz**) de base de datos a restaurar en **db_dumps**
-6. Desplegar con: ``` bash docker-compose up -d```
+6. Desplegar con: ```docker-compose up -d```
 
 A continuación se incluye una tabla con la estructura:
 
 | Componente | Tipo | Responsabilidad | Contenido | Configuración |
-| :--- |:--- | :---|:---|
+| :--- |:--- | :---| :---| :---|
 | **apache2** | Contenedor | Servicio web | Debian8, Apache2 | El mínimo de módulos de apache y el [servidor web](http://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-apache.html#web-environment-variables) |
 | **cron** | Contenedor|Tarea de cron de Moodle | Debian8, Cron | Frecuencia de ejecución de tarea cron de Moodle |
 | **db_dumps** | Volumen | Restaurar una base de datos inicial | Archivos de respaldo de base de datos. | Para restaurar al iniciar, nombre el archivo sql de respaldo como dump-init.sql.gz |
@@ -98,12 +98,12 @@ A partir de instrucciones en [la documentación de Docker](https://docs.docker.c
 sudo apt-get update
 
 # Paquetes extra
-sudo apt-get install curl \
+sudo apt-get install -y curl \
     linux-image-extra-$(uname -r) \
     linux-image-extra-virtual
 
 #Configurar el repositorio
-sudo apt-get install apt-transport-https \
+sudo apt-get install -y apt-transport-https \
                        software-properties-common \
                        ca-certificates
 
@@ -114,8 +114,8 @@ curl -fsSL https://yum.dockerproject.org/gpg | sudo apt-key add -
 $(apt-key fingerprint 58118E89F3A912897C070ADBF76221572C526091 | wc -l | grep -qv 0) && echo Verificado || echo "Error de verificacion"
 
 # Instalar repositorio estable
-sudo apt-get install software-properties-common
-sudo add-apt-repository \
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository -y \
        "deb https://apt.dockerproject.org/repo/ \
        ubuntu-$(lsb_release -cs) \
        main"
