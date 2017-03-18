@@ -14,10 +14,4 @@ sed -i \
 # Remote xdebug host
 sed -i "s@dockerhost@$(/sbin/ip route|awk '/default/ { print $3 }')@" /usr/local/etc/php/conf.d/xdebug.ini
 
-# docker-php-entrypoint from https://github.com/docker-library/php docker-php-entrypoint
-# first arg is `-f` or `--some-option`
-if [ "${1#-}" != "$1" ]; then
-        set -- php-fpm "$@"
-fi
-
-exec "$@"
+docker-php-entrypoint "$@"

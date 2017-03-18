@@ -57,10 +57,10 @@ RUN apt-get clean && \
 # Propiedad
 RUN usermod -u 1000 www-data
 
+ENTRYPOINT ["php-fpm-xdebug-entrypoint"]
+
 WORKDIR ${WEB_DOCUMENT_ROOT}
 
 EXPOSE 9000
 
-ENTRYPOINT [/usr/local/bin/php-fpm-xdebug-entrypoint]
-
-CMD php-fpm
+CMD ["php-fpm"]
