@@ -3,9 +3,19 @@ LABEL Description="Esta imagen sirve para la configuración de php-fpm para mood
 
 ARG DOCUMENT_ROOT=/var/www/html
 ARG MY_TZ=America/Costa_Rica
+ARG POSTGRES_DB=moodle
+ARG POSTGRES_USER=metics
+ARG POSTGRES_PASSWORD=devpass
+ARG MOODLE_DATA=/var/moodledata
+ARG WWWROOT=localhost
 
 ENV WEB_DOCUMENT_ROOT=$DOCUMENT_ROOT
 ENV WEB_MY_TZ=${MY_TZ}
+ENV DB_POSTGRES_DB=$POSTGRES_DB
+ENV DB_POSTGRES_USER=$POSTGRES_USER
+ENV DB_POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+ENV WEB_MOODLE_DATA=$MOODLE_DATA
+ENV WEB_WWWROOT=$WWWROOT
 
 # PHP
 RUN apt-get update && \
@@ -32,7 +42,7 @@ RUN apt-get install -y graphviz clamav clamav-daemon zip unzip aspell-es
 COPY php-fpm/conf/custom-php.ini /usr/local/etc/php/conf.d/php.ini
 COPY php-fpm/conf/custom-xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY php-fpm/conf/custom-opcache.ini /usr/local/etc/php/conf.d/opcache.ini
-COPY php-fpm/conf/php-fpm-xdebug.sh /usr/local/etc/php/php-fpm-xdebug.sh
+COPY php-fpm/conf/php-fpm-xdebug-entrypoint.sh /usr/local/bin/php-fpm-xdebug-entrypoint
 
 # TZ
 RUN echo "${WEB_MY_TZ}" > /etc/timezone && \
@@ -49,6 +59,8 @@ RUN usermod -u 1000 www-data
 
 WORKDIR ${WEB_DOCUMENT_ROOT}
 
-ENTRYPOINT ["/usr/local/etc/php/php-fpm-xdebug.sh"]
-
 EXPOSE 9000
+
+ENTRYPOINT [/usr/local/bin/php-fpm-xdebug-entrypoint]
+
+CMD php-fpm
