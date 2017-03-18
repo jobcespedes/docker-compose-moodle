@@ -52,10 +52,12 @@ La siguiente tabla contiene las variables utilizadas en el archivo [**.env**](.e
 1. Detener el proyecto
 ``` bash
 docker-compose stop
+# docker-compose stop <servicio>
 ```
 2. Iniciar el proyecto
 ``` bash
-docker-compose stop
+docker-compose start
+# docker-compose start <servicio>
 ```
 
 2. Correr proyecto
@@ -72,7 +74,13 @@ docker-compose down
 # Eliminar con un nombre de proyecto especifico:
 # docker-compose -p mi-proy down
 ```
-4. Algunos comandos útiles de Docker
+4. Logs
+``` bash
+docker-compose logs
+#docker-compose logs <servicio>
+```
+
+5. Algunos comandos útiles de Docker
 ``` bash
 # Ver contenedores
 docker ps
