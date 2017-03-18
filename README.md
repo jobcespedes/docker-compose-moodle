@@ -5,9 +5,9 @@
 ![Postgres](https://img.shields.io/badge/Postgres-9.3-blue.svg?colorB=0085B0)
 [![Software License](https://img.shields.io/badge/License-APACHE-black.svg?style=flat-square&colorB=585ac2)](LICENSE)
 
-docker-compose-moodle es un repositorio para crear rapidamente un entorno de trabajo con Moodle usando contenedores para cada uno sus principales componentes. El entorno de trabajo se crea y gestiona con Docker Compose.
+docker-compose-moodle es un repositorio para crear rápidamente un entorno de trabajo con Moodle (Apache2, PHP-FPM con XDEBUG y Postgres) usando contenedores para cada uno sus principales componentes. El entorno de trabajo se crea y gestiona con Docker Compose.
 
-## Pasos rápidos para crear:
+## Pasos rápidos para crear proyecto:
 1. Tener Docker. Ver como instalar [_Docker_](#markdown-header-instalar-docker) en Ubuntu
 2. Tener Docker Compose. Ver como instalar [_Docker Compose_](#markdown-header-instalar-docker-compose) en Ubuntu
 3. Descargar este repo y acceder a él: ``` bash git clone https://jobcespedes@bitbucket.org/jobcespedes/docker-compose-moodle.git```
@@ -23,7 +23,7 @@ A continuación se incluye una tabla con la estructura:
 | **cron** | Contenedor|Tarea de cron de Moodle | Debian8, Cron | Frecuencia de ejecución de tarea cron de Moodle |
 | **db_dumps** | Volumen | Restaurar una base de datos inicial | Archivos de respaldo de base de datos. | Para restaurar al iniciar, nombre el archivo sql de respaldo como dump-init.sql.gz |
 | **moodledata** | Volumen | [Almacen de datos de moodle](https://docs.moodle.org/all/es/Directorio_Moodledata) | Archivos generados por Moodle |  |
-| **php-fpm** | Contenedor | Interprete y manejador de procesos para PHP | Debian8, PHP-FPM | Modulos de php  y paquetes adicionales para Moodle  |
+| **php-fpm** | Contenedor | Interprete y manejador de procesos para PHP | Debian8, PHP-FPM, XDEBUG | Modulos de php  y paquetes adicionales para Moodle  |
 | **postgres** | Contenedor | Gestor de base de datos  | Debian8, Postgres | [Usuario y base de datos](https://hub.docker.com/_/postgres/) |
 | ***REPO_FOLDER*** | Volumen | Código de aplicación  | Código de Moodle  | Por defecto es './html' (ver archivo .env) |
 
