@@ -18,8 +18,8 @@ ENV WEB_WWWROOT=$WWWROOT
 RUN apt-get update && apt-get install --no-install-recommends -y cron inetutils-syslogd supervisor
 
 # Archivos cron
-ADD ./config/moodle.cron /etc/cron.d/moodle
-ADD ./config/supervisor_cron.conf /etc/supervisor/conf.d/supervisor_cron.conf
+ADD ./cron/conf/cron_moodle_entry /etc/cron.d/moodle
+ADD cron/conf/supervisor.conf /etc/supervisor/conf.d/supervisor_cron.conf
 
 RUN sed -i "s@DOCROOT@${WEB_DOCUMENT_ROOT}@" /etc/cron.d/moodle && \
     chmod 0644 /etc/cron.d/moodle && \
@@ -33,6 +33,6 @@ RUN apt-get clean && \
     rm -r /var/cache/apt/*
 
 # Correr el archivo
-COPY ./config/conf_moodle.sh /opt/conf_moodle.sh
+COPY ./cron/conf/moodle_config_php.sh /opt/conf_moodle.sh
 
 CMD /opt/conf_moodle.sh && /usr/bin/supervisord

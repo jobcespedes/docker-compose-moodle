@@ -22,8 +22,6 @@ RUN rm -rf /etc/apache2/mods-enabled/* && \
 RUN echo "${WEB_MY_TZ}" > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata
 
-COPY ./config/conf_moodle.sh /opt/docker/bin/conf_moodle.sh
-
 WORKDIR $WEB_DOCUMENT_ROOT
 
 EXPOSE 80

@@ -29,14 +29,15 @@ RUN apt-get update && \
 RUN apt-get install -y graphviz clamav clamav-daemon zip unzip aspell-es
 
 # Config
-COPY config/conf_php.ini /usr/local/etc/php/conf.d/php.ini
-COPY config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
-COPY config/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY php-fpm/conf/custom-php.ini /usr/local/etc/php/conf.d/php.ini
+COPY php-fpm/conf/custom-xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY php-fpm/conf/custom-opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY php-fpm/conf/php-fpm-xdebug.sh /usr/local/etc/php/php-fpm-xdebug.sh
 
 # TZ
 RUN echo "${WEB_MY_TZ}" > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
-    sed -i  "s@MY_TZ_WILL_BE_REPLACE@${WEB_MY_TZ}@" /usr/local/etc/php/conf.d/xdebug.ini    
+    sed -i  "s@MY_TZ_WILL_BE_REPLACE@${WEB_MY_TZ}@" /usr/local/etc/php/conf.d/xdebug.ini
 
 # Limpieza
 RUN apt-get clean && \
@@ -48,6 +49,6 @@ RUN usermod -u 1000 www-data
 
 WORKDIR ${WEB_DOCUMENT_ROOT}
 
-CMD ["php-fpm"]
+ENTRYPOINT ["/usr/local/etc/php/php-fpm-xdebug.sh"]
 
 EXPOSE 9000

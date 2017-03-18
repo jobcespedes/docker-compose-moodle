@@ -40,8 +40,6 @@ services:
       - app
     expose:
       - "${PHP_SOCKET}"
-    extra_hosts:
-      - "dockerhost:${HOST_IP}"
     links:
       - postgres
     depends_on:
