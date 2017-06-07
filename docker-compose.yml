@@ -36,6 +36,18 @@ services:
     build:
       context: .
       dockerfile: php-fpm/Dockerfile
+      args:
+        - DOCUMENT_ROOT
+        - MY_TZ
+    environment:
+      - XDEBUG_CONFIG="idekey=PHPTEST"
+      - DOCUMENT_ROOT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - MOODLE_DATA
+      - WWWROOT
+      - WWW_PORT
     volumes_from:
       - app
     expose:
