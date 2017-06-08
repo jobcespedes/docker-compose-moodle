@@ -100,6 +100,19 @@ docker rmi $(docker images -f "dangling=true" -q)
 Se puede restaurar una base de datos, agregando el script sql generador (comprimido como gzip) a la caperta db_dumps y nombrando el archivo como dump-init.sql.gz
 > **IMPORTANTE**: Dependiendo del tamaño, la ejecución de este sql podría demorar la disponibilidad inicial de la base de datos.
 
+### XDEBUG
+> Se utiliza el idekey `PHPTEST`
+
+#### PHPStorm
+Configuración para depurar con IDE PHPStorm:
+
+1. Agregar servidor:
+    * Settings -> Languages -> PHP -> Servers
+2. Agregar PHP remote debug
+    * Run / Debug Configurations -> PHP remote debug
+    * Utilizar servidor previamente agregado y establecer como idekey el valor `PHPTEST`
+3. Activar botón `Start listening for PHP Debug Connections`
+
 ## Instalar Docker
 A partir de instrucciones en [la documentación de Docker](https://docs.docker.com/engine/installation/linux/ubuntu/)
 ``` bash
