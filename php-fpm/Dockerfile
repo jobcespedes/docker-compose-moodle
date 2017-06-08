@@ -3,19 +3,9 @@ LABEL Description="Esta imagen sirve para la configuración de php-fpm para mood
 
 ARG DOCUMENT_ROOT=/var/www/html
 ARG MY_TZ=America/Costa_Rica
-ARG POSTGRES_DB=moodle
-ARG POSTGRES_USER=metics
-ARG POSTGRES_PASSWORD=devpass
-ARG MOODLE_DATA=/var/moodledata
-ARG WWWROOT=localhost
 
 ENV WEB_DOCUMENT_ROOT=$DOCUMENT_ROOT
 ENV WEB_MY_TZ=${MY_TZ}
-ENV DB_POSTGRES_DB=$POSTGRES_DB
-ENV DB_POSTGRES_USER=$POSTGRES_USER
-ENV DB_POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-ENV WEB_MOODLE_DATA=$MOODLE_DATA
-ENV WEB_WWWROOT=$WWWROOT
 
 # PHP
 RUN apt-get update && \
@@ -23,7 +13,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends php5-xdebug && \
     # https://docs.moodle.org/31/en/PHP \
     apt-get install -y --no-install-recommends libxml2-dev zlib1g-dev libpng12-dev \
-        libfreetype6-dev libjpeg62-turbo-dev libicu-dev libpspell-dev libpq-dev libldap2-dev && \
+        libfreetype6-dev libjpeg62-turbo-dev libicu-dev libpspell-dev libpq-dev libldap2-dev libxslt-dev && \
     docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ \
         --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ && \
     docker-php-ext-install gd && \
@@ -32,7 +22,7 @@ RUN apt-get update && \
     docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu && \
     docker-php-ext-install ldap && \
     # Ya están instalados curl iconv mbstring openssl tokenizer ctype simplexml spl pcre dom xml json  \
-    docker-php-ext-install soap zip intl pspell pgsql && \
+    docker-php-ext-install soap zip intl pspell pgsql xsl && \
     docker-php-ext-configure opcache --enable-opcache && docker-php-ext-install opcache
 
 # Adicionales
@@ -57,10 +47,10 @@ RUN apt-get clean && \
 # Propiedad
 RUN usermod -u 1000 www-data
 
-ENTRYPOINT ["php-fpm-xdebug-entrypoint"]
-
 WORKDIR ${WEB_DOCUMENT_ROOT}
 
 EXPOSE 9000
+
+ENTRYPOINT ["php-fpm-xdebug-entrypoint"]
 
 CMD ["php-fpm"]

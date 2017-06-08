@@ -103,6 +103,20 @@ docker rmi $(docker images -f "dangling=true" -q)
 A database can be automatically restored when postgres service starts. By placing a dump file inside 'db_dumps' folder and naming it "dump-init.sql.gz", postgres container will try to restore that file as initial database.
 > **IMPORTANT**: Depending of dump-init.sql.gz size, database initial availability could be delayed
 
+### XDEBUG
+> Use idekey `PHPTEST`
+
+#### PHPStorm
+Debug config for IDE PHPStorm:
+
+1. Add server:
+    * Settings -> Languages -> PHP -> Servers
+2. Add PHP remote debug
+    * Run / Debug Configurations -> PHP remote debug
+    * Use server created in step #1 and set idekey `PHPTEST`
+3. Enable `Start listening for PHP Debug Connections`
+
+
 ## Install Docker
 > Ubuntu 16
 
@@ -253,6 +267,19 @@ docker rmi $(docker images -f "dangling=true" -q)
 
 Se puede restaurar una base de datos, agregando el script sql generador (comprimido como gzip) a la caperta db_dumps y nombrando el archivo como dump-init.sql.gz
 > **IMPORTANTE**: Dependiendo del tamaño, la ejecución de este sql podría demorar la disponibilidad inicial de la base de datos.
+
+### XDEBUG
+> Se utiliza el idekey `PHPTEST`
+
+#### PHPStorm
+Configuración para depurar con IDE PHPStorm:
+
+1. Agregar servidor:
+    * Settings -> Languages -> PHP -> Servers
+2. Agregar PHP remote debug
+    * Run / Debug Configurations -> PHP remote debug
+    * Utilizar servidor previamente agregado y establecer como idekey el valor `PHPTEST`
+3. Activar botón `Start listening for PHP Debug Connections`
 
 ## Instalar Docker
 >Ubuntu 16
