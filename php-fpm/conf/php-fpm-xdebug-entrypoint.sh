@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-if [ $WWW_PORT = '80' ]; then
+if [[ $WWW_PORT == '80' ]]; then
     host_port="${WWWROOT}"
 else
     host_port="${WWWROOT}:${WWW_PORT}"
