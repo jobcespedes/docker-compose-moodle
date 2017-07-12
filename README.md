@@ -116,6 +116,18 @@ Debug config for IDE PHPStorm:
     * Use server created in step #1 and set idekey `PHPTEST`
 3. Enable `Start listening for PHP Debug Connections`
 
+### Pgadmin4
+Config pgadmin4
+1. Go to http://localhost:5050
+2. In ```File -> Preferences -> Binary paths``` set ```usr/bin```
+3. Add new server:
+    * Tab ```General```
+        * Name: Any name you want
+    * Tab ```Connection```
+        * Host name/address: ```postgres```
+        * Host Username: ```user```
+        * Host Password: ```password```
+    * Save
 
 ## Install Docker
 > Ubuntu 16
@@ -280,6 +292,19 @@ Configuración para depurar con IDE PHPStorm:
     * Run / Debug Configurations -> PHP remote debug
     * Utilizar servidor previamente agregado y establecer como idekey el valor `PHPTEST`
 3. Activar botón `Start listening for PHP Debug Connections`
+
+### Pgadmin4
+Pasos para usar pgadmin4
+1. Ingresar a http://localhost:5050
+2. En ```File -> Preferences -> Binary paths``` establecer en ```usr/bin```
+3. Agregar nuevo servidor:
+    * Pestaña ```General```
+        * Name: Un nombre para el servidor
+    * Pestaña ```Connection```
+        * Host name/address: ```postgres```
+        * Host Username: ```metics```
+        * Host Password: ```devpass```
+    * Guardar
 
 ## Instalar Docker
 >Ubuntu 16
