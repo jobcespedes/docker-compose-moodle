@@ -92,11 +92,13 @@ services:
 
  # Gestor de base de datos
   pgadmin:
-    image: "fenglc/pgadmin4"
+    image: "foxylion/pgadmin4"
     ports:
-      - "5050:5050"
+      - "5050:80"
     links:
       - postgres
+    volumes:
+      - ./db_dumps:/root
     depends_on:
       - postgres
 

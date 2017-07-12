@@ -113,6 +113,19 @@ Configuración para depurar con IDE PHPStorm:
     * Utilizar servidor previamente agregado y establecer como idekey el valor `PHPTEST`
 3. Activar botón `Start listening for PHP Debug Connections`
 
+### Pgadmin4
+Pasos para usar pgadmin4
+1. Ingresar a http://localhost:5050
+2. En ```File -> Preferences -> Binary paths``` establecer en ```usr/bin```
+3. Agregar nuevo servidor:
+    * Pestaña ```General```
+        * Name: Un nombre para el servidor
+    * Pestaña ```Connection```
+        * Host name/address: ```postgres```
+        * Host Username: ```metics```
+        * Host Password: ```devpass```
+    * Guardar
+
 ## Instalar Docker
 A partir de instrucciones en [la documentación de Docker](https://docs.docker.com/engine/installation/linux/ubuntu/)
 ``` bash
