@@ -10,7 +10,7 @@ ENV WEB_MY_TZ=${MY_TZ}
 # PHP
 RUN apt-get update && \
     # Bug https://github.com/docker-library/php/issues/133 \
-    apt-get install -y --no-install-recommends php5-xdebug && \
+    apt-get install -y --no-install-recommends php-xdebug && \
     # https://docs.moodle.org/31/en/PHP \
     apt-get install -y --no-install-recommends libxml2-dev zlib1g-dev libpng12-dev \
         libfreetype6-dev libjpeg62-turbo-dev libicu-dev libpspell-dev libpq-dev libldap2-dev libxslt-dev && \
