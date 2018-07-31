@@ -1,4 +1,4 @@
-FROM metics/php-fpm:5.6
+FROM metics/php-fpm:7
 LABEL Description="Esta imagen sirve para la configuración del cron de moodle" Version="1.0"
 
 ARG DOCUMENT_ROOT=/var/www/html

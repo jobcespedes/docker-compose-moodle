@@ -10,7 +10,7 @@ services:
 
   # Servicio de postgres:
   postgres:
-    image: "metics/postgres:9.3-${PG_LOCALE}"
+    image: "metics/postgres:9.4-${PG_LOCALE}"
     build:
       context: .
       dockerfile: postgres/Dockerfile
@@ -32,7 +32,7 @@ services:
 
   # Servicio de PHP-FPM
   php-fpm:
-    image: "metics/php-fpm:5.6"
+    image: "metics/php-fpm:7"
     build:
       context: .
       dockerfile: php-fpm/Dockerfile
@@ -79,7 +79,7 @@ services:
 
   # Cron para moodle
   cron:
-    image: metics/php-fpm:5.6-cron
+    image: metics/php-fpm:7-cron
     build:
       context: .
       dockerfile: cron/Dockerfile

@@ -1,4 +1,4 @@
-FROM php:5-fpm
+FROM php:7.0.31-fpm-jessie
 LABEL Description="Esta imagen sirve para la configuración de php-fpm para moodle" Version="1.0"
 
 ARG DOCUMENT_ROOT=/var/www/html
@@ -9,9 +9,8 @@ ENV WEB_MY_TZ=${MY_TZ}
 
 # PHP
 RUN apt-get update && \
-    # Bug https://github.com/docker-library/php/issues/133 \
-    apt-get install -y --no-install-recommends php5-xdebug && \
-    # https://docs.moodle.org/31/en/PHP \
+    pecl install xdebug && \
+    # https://docs.moodle.org/35/en/PHP \
     apt-get install -y --no-install-recommends libxml2-dev zlib1g-dev libpng12-dev \
         libfreetype6-dev libjpeg62-turbo-dev libicu-dev libpspell-dev libpq-dev libldap2-dev libxslt-dev && \
     docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ \
