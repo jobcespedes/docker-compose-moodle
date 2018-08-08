@@ -13,7 +13,7 @@ docker-compose-moodle quickly builds a local workspace for Moodle  (Apache2, PHP
 1. Docker installed. Check out how to install [_Docker in Ubuntu_](#install-docker)
 2. Docker Compose installed. Check out how to install [_Docker Compose in Ubuntu_](#install-docker-compose)
 3. Download this repo: ```git clone https://github.com/jobcespedes/docker-compose-moodle.git && cd docker-compose-moodle```
-4. Clone Moodle repo: ```git clone -b MOODLE_31_STABLE https://github.com/moodle/moodle.git html```
+4. Clone Moodle repo: ```git clone -b MOODLE_35_STABLE https://github.com/moodle/moodle.git html```
 5. Deploy with: ```docker-compose up -d```
 
 ## Docker Compose structure
@@ -190,7 +190,7 @@ docker-compose-moodle es un repositorio para crear rápidamente un entorno de tr
 1. Tener Docker. Ver como instalar [_Docker en Ubuntu_](#instalar-docker)
 2. Tener Docker Compose. Ver como instalar [_Docker Compose como contenedor_](#instalar-docker-compose)
 3. Descargar este repo y acceder a él: ```git clone https://github.com/jobcespedes/docker-compose-moodle.git && cd docker-compose-moodle```
-4. Copiar repositorio de código de Moodle: ```git clone -b MOODLE_31_STABLE https://github.com/moodle/moodle.git html```
+4. Copiar repositorio de código de Moodle: ```git clone -b MOODLE_35_STABLE https://github.com/moodle/moodle.git html```
 5. Desplegar con: ```docker-compose up -d```
 
 ## Estructura de Docker Compose
