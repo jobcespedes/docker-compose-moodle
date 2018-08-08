@@ -10,7 +10,7 @@ services:
 
   # Servicio de postgres:
   postgres:
-    image: "metics/postgres:9.3-${PG_LOCALE}"
+    image: "metics/postgres:9.4-${PG_LOCALE}"
     build:
       context: .
       dockerfile: postgres/Dockerfile
@@ -18,8 +18,8 @@ services:
         locale: "${PG_LOCALE}"
     expose:
       - "${PG_PORT}"
-    ports:
-      - "${PG_PORT}:5432"
+#    ports:
+#      - "${IP}:${PG_PORT}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./db_dumps:/opt/db_dumps
@@ -32,7 +32,7 @@ services:
 
   # Servicio de PHP-FPM
   php-fpm:
-    image: "metics/php-fpm:5.6"
+    image: "metics/php-fpm:7"
     build:
       context: .
       dockerfile: php-fpm/Dockerfile
@@ -70,7 +70,7 @@ services:
     volumes_from:
       - app
     ports:
-      - "${WWW_PORT}:80"
+      - "${IP}:${WWW_PORT}:80"
     links:
       - php-fpm
       - postgres
@@ -79,7 +79,7 @@ services:
 
   # Cron para moodle
   cron:
-    image: metics/php-fpm:5.6-cron
+    image: metics/php-fpm:7-cron
     build:
       context: .
       dockerfile: cron/Dockerfile
@@ -94,7 +94,7 @@ services:
   pgadmin:
     image: "foxylion/pgadmin4"
     ports:
-      - "5050:80"
+      - "${IP}:5050:80"
     links:
       - postgres
     volumes:

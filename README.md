@@ -1,8 +1,8 @@
 # docker-compose-moodle
-![Moodle](https://img.shields.io/badge/Moodle-3.1-blue.svg?colorB=f98012)
+![Moodle](https://img.shields.io/badge/Moodle-3.5-blue.svg?colorB=f98012)
 ![Apache2](https://img.shields.io/badge/Apache2-2.4-blue.svg?colorB=557697)
-![PHP](https://img.shields.io/badge/PHP-5.6-blue.svg?colorB=8892BF)
-![Postgres](https://img.shields.io/badge/Postgres-9.3-blue.svg?colorB=0085B0)
+![PHP](https://img.shields.io/badge/PHP-7-blue.svg?colorB=8892BF)
+![Postgres](https://img.shields.io/badge/Postgres-9.4-blue.svg?colorB=0085B0)
 [![Software License](https://img.shields.io/badge/License-APACHE-black.svg?style=flat-square&colorB=585ac2)](LICENSE)
 
 >Leer en [**Español**](#español)
