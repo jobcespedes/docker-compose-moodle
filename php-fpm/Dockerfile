@@ -39,6 +39,25 @@ RUN echo "${WEB_MY_TZ}" > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
     sed -i  "s@MY_TZ_WILL_BE_REPLACE@${WEB_MY_TZ}@" /usr/local/etc/php/conf.d/xdebug.ini
 
+
+# PHP OCI
+## Oracle Instantclient
+ADD php-fpm/conf/instantclient-basic-linux.x64-12.2.0.1.0.zip /tmp/
+ADD php-fpm/conf/instantclient-sdk-linux.x64-12.2.0.1.0.zip /tmp/
+RUN unzip /tmp/instantclient-basic-linux.x64-12.2.0.1.0.zip -d /opt/ && \
+    unzip /tmp/instantclient-sdk-linux.x64-12.2.0.1.0.zip -d /opt/ && \
+    mv /opt/instantclient_12_2 /opt/oracle && \
+    ln -s /opt/oracle/libclntsh.so.12.1 /opt/oracle/libclntsh.so && \
+    ln -s /opt/oracle/libclntshcore.so.12.1 /opt/oracle/libclntshcore.so && \
+    ln -s /opt/oracle/libocci.so.12.1 /opt/oracle/libocci.so && \
+    rm -rf /tmp/*.zip
+ENV ORACLE_HOME /opt/oracle
+ENV LD_LIBRARY_PATH /opt/oracle
+## OCI
+RUN apt-get install -y libaio-dev && \
+    docker-php-ext-configure oci8 --with-oci8=instantclient,/opt/oracle && \
+    docker-php-ext-install oci8
+
 # Limpieza
 RUN apt-get clean && \
     rm -r /var/lib/apt/lists/* && \
