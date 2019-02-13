@@ -1,4 +1,4 @@
-FROM postgres:9.4
+FROM postgres:9.6
 LABEL Description="Esta imagen sirve para la configuración de la capa de base de datos" Version="1.0"
 
 ARG locale=es_CR

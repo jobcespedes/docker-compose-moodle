@@ -18,6 +18,20 @@ sed -i \
     ${DOCUMENT_ROOT}/config.php
 
 # Remote xdebug host
-sed -i "s@dockerhost@$(/sbin/ip route|awk '/default/ { print $3 }')@" /usr/local/etc/php/conf.d/xdebug.ini
+gateway=$(awk 'END{print $1}' /etc/hosts |  awk -F "." '{print $1 "." $2 "." $3 "." 1}')
+sed -i "s@dockerhost@${gateway}@" /usr/local/etc/php/conf.d/xdebug.ini
+
+# Custom CA
+if ! [ -z ${CA_CERT+x} ]; then
+    # On Debian, place the CA certificate where 'update-ca-certificates' will find it
+    cat << _EOF > /usr/local/share/ca-certificates/custom-ca.crt
+${CA_CERT}
+_EOF
+    update-ca-certificates
+    if [ -f /usr/local/lib/python2.7/dist-packages/certifi/cacert.pem ]; then
+        rm /usr/local/lib/python2.7/dist-packages/certifi/cacert.pem
+        ln -s /usr/local/share/ca-certificates/custom-ca.crt /usr/local/lib/python2.7/dist-packages/certifi/cacert.pem
+    fi
+fi
 
 docker-php-entrypoint "$@"

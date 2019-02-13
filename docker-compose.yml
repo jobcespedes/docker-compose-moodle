@@ -10,7 +10,7 @@ services:
 
   # Servicio de postgres:
   postgres:
-    image: "metics/postgres:9.4-${PG_LOCALE}"
+    image: "metics/postgres:9.6-${PG_LOCALE}"
     build:
       context: .
       dockerfile: postgres/Dockerfile
@@ -48,6 +48,7 @@ services:
       - MOODLE_DATA
       - WWWROOT
       - WWW_PORT
+      # - CA_CERT
     volumes_from:
       - app
     expose:

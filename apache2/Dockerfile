@@ -1,4 +1,4 @@
-FROM webdevops/apache:debian-8
+FROM webdevops/apache:debian-9
 LABEL Description="Esta imagen sirve para la configuración de apache para moodle" Version="1.0"
 
 ARG PHP_SOCKET=php-fpm:9000
