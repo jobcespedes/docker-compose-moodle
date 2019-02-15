@@ -22,6 +22,6 @@ RUN apt-get clean && \
     rm -r /var/lib/apt/lists/* && \
     rm -r /var/cache/apt/*
 
-ENTRYPOINT ["docker-php-entrypoint"]
+ENTRYPOINT ["php-fpm-xdebug-entrypoint"]
 
 CMD /usr/bin/supervisord

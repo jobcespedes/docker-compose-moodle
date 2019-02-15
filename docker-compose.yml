@@ -7,6 +7,8 @@ services:
     volumes:
       - ./${REPO_FOLDER}:${DOCUMENT_ROOT}
       - ./moodledata:${MOODLE_DATA}
+      # Uncomment following lines and modify path for CUSTOM_CA
+      # - /usr/local/share/ca-certificates/overcloud-cacert-mo.crt:/usr/local/share/ca-certificates/custom-ca.crt
 
   # Servicio de postgres:
   postgres:
@@ -18,8 +20,9 @@ services:
         locale: "${PG_LOCALE}"
     expose:
       - "${PG_PORT}"
-#    ports:
-#      - "${IP}:${PG_PORT}:5432"
+   # Uncomment following lines to expose postgres to host network
+   # ports:
+   #   - "${IP}:${PG_PORT}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./db_dumps:/opt/db_dumps
@@ -48,7 +51,11 @@ services:
       - MOODLE_DATA
       - WWWROOT
       - WWW_PORT
-      # - CA_CERT
+      # Uncomment following lines and modify variable content for CUSTOM_CA
+      # - |-
+      #   CA_CERT=-----BEGIN CERTIFICATE-----
+      #   REPLACE_CA_CONTENT
+      #   -----END CERTIFICATE-----
     volumes_from:
       - app
     expose:
@@ -86,6 +93,13 @@ services:
       dockerfile: cron/Dockerfile
       args:
         DOCUMENT_ROOT: ${DOCUMENT_ROOT}
+    environment:
+      - XDEBUG_CONFIG="idekey=PHPTEST"
+      # Uncomment following lines and modify variable content for CUSTOM_CA 
+      # - |-
+      #   CA_CERT=-----BEGIN CERTIFICATE-----
+      #   REPLACE_CA_CONTENT
+      #   -----END CERTIFICATE-----
     volumes_from:
       - app
     depends_on:
