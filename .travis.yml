@@ -1,0 +1,11 @@
+---
+language: bash
+services: docker
+fast_finish: true
+
+install:
+  - test/scripts/install.sh
+script:
+  - test/scripts/script.sh
+after_script:
+  - test/scripts/after-script.sh
