@@ -9,27 +9,28 @@
 
 >Leer en [**Español**](#español)
 
-This project quickly builds a local workspace for Moodle  (Apache2, PHP-FPM with XDEBUG y Postgres) using containers for each of its main components. The local workspace is build and manage by Docker Compose
+This project quickly builds a local workspace for Moodle  (Apache2, PHP-FPM with XDEBUG y Postgres) using containers for each of its main components. The local workspace is built and managed by Docker Compose
 
 ## Quickstart:
-1. Docker installed. Check out how to install [Docker](https://docs.docker.com/install/)
-2. Docker Compose installed. Check out how to install [Docker Compose](https://docs.docker.com/compose/install/)
+1. Install Docker. Check out how to install [Docker](https://docs.docker.com/install/)
+2. Install Docker Compose. Check out how to install [Docker Compose](https://docs.docker.com/compose/install/)
 3. Download this repo: `git clone https://github.com/jobcespedes/docker-compose-moodle.git && cd docker-compose-moodle`
 4. Clone Moodle repo: `git clone --branch MOODLE_35_STABLE --depth 1 git://github.com/moodle/moodle html`
-5. Deploy with: `docker-compose up -d`
+5. Run with: `docker-compose up -d`
 
 ## Contents
 1. [Environment Variables](#Environment-variables)
 2. [Docker Compose Resources](#Docker-Compose-resources)
 3. [Workspace Operations](#Project-management-with-Docker-Compose)
 4. [Debugging with XDEBUG](#XDEBUG)
-5. [Database management with Pgadmin4](#Pgadmin4)
-6. [Notes](#Notes)
-7. [Install Docker](https://docs.docker.com/install/)
-8. [Install Docker Compose](https://docs.docker.com/compose/install/)
+5. [Moodle Cron Debugging](#Cron-debugging)
+6. [Database management with Pgadmin4](#Pgadmin4)
+7. [Notes](#Notes)
+8. [Install Docker](https://docs.docker.com/install/)
+9. [Install Docker Compose](https://docs.docker.com/compose/install/)
 
 ## Environment variables
-The following table describes environment variables set in [**.env**](.env). The defaults work for a initial setup. Change them if needed.
+The following table describes environment variables set in [**.env**](.env). The defaults work for a initial setup. They can be modified if needed.
 
 | Variable | Default value | Use |
 | :--- |:--- |:--- |
@@ -71,12 +72,12 @@ docker-compose up -d
 2. Stop project
 ``` bash
 docker-compose stop
-# docker-compose stop <service>
+# docker-compose stop php-fpm
 ```
 3. Start project
 ``` bash
 docker-compose start
-# docker-compose start <service>
+# docker-compose start php-fpm
 ```
 4. Remove project
 ``` bash
@@ -89,26 +90,50 @@ docker-compose down
 5. Logs
 ``` bash
 docker-compose logs
-# docker-compose logs -f --tail="20" <service>
+# docker-compose logs -f --tail="20" php-fpm
 ```
 
 ## XDEBUG
 > Use idekey `PHPTEST`
 
-### PHPStorm
+#### PHPStorm
 Debug config for IDE PHPStorm:
 
 1. Add server:
     * Settings -> Languages -> PHP -> Servers
+    * Name: localhost
+    * Host: localhost
+    * Port: 80
+    * Debugger: Xdebug
+    * Use path mapping: checked
+    * Absolute path on the server: /var/www/html
+
+![Debug button](docs/img/phpstorm_add_server.gif)
+
 2. Add PHP remote debug
     * Run / Debug Configurations -> PHP remote debug
     * Use server created in step #1 and set idekey `PHPTEST`
-3. Enable `Start listening for PHP Debug Connections`
+
+![Debug button](docs/img/phpstorm_add_remote_debug.gif)
+
+3. Enable `Start listening for PHP Debug Connections` ![Debug button](docs/img/phpstorm_enable_debug.png)
+
+### Cron debugging
+Follow previous steps, set a breakpoint and then run:
+```bash
+docker-compose exec cron php admin/cli/cron.php
+```
+There is a scrip for [Specific cron tasks](https://docs.moodle.org/35/en/Administration_via_command_line). For example:
+```bash
+docker-compose exec cron php admin/tool/task/cli/schedule_task.php --execute='\core\task\cache_cleanup_task'
+# Listing tasks
+# docker-compose exec cron php admin/tool/task/cli/schedule_task.php --list
+```
 
 ## Pgadmin4
 Config pgadmin4
 1. Go to http://localhost:5050
-2. In ```File -> Preferences -> Binary paths``` set ```usr/bin```
+2. In ```File -> Preferences -> Binary paths``` set ```/usr/bin```
 3. Add new server:
     * Tab ```General```
         * Name: Any name you want
@@ -121,7 +146,7 @@ Config pgadmin4
 ## Notes
 > Restore a specific database when postgres service starts
 
-A database can be automatically restored when postgres service starts. By placing a dump file inside 'db_dumps' folder and naming it "dump-init.sql.gz", postgres container will try to restore that file as initial database.
+A database can be automatically restored when postgres service starts. By placing a dump file inside 'db_dumps' folder and naming it "dump-init.sql.gz", postgres container will try to restore that file as an initial database.
 > **IMPORTANT**: Depending of dump-init.sql.gz size, database initial availability could be delayed
 
 # Español
@@ -177,12 +202,12 @@ docker-compose up -d
 2. Detener el proyecto
 ``` bash
 docker-compose stop
-# docker-compose stop <servicio>
+# docker-compose stop php-fpm
 ```
 3. Iniciar el proyecto
 ``` bash
 docker-compose start
-# docker-compose start <servicio>
+# docker-compose start php-fpm
 ```
 4. Eliminar proyecto
 ``` bash
@@ -195,7 +220,7 @@ docker-compose down
 5. Logs
 ``` bash
 docker-compose logs
-# docker-compose logs -f --tail="20" <service>
+# docker-compose logs -f --tail="20" php-fpm
 ```
 
 ### XDEBUG
@@ -204,17 +229,41 @@ docker-compose logs
 #### PHPStorm
 Configuración para depurar con IDE PHPStorm:
 
-1. Agregar servidor:
+1. Agregar server:
     * Settings -> Languages -> PHP -> Servers
+    * Name: localhost
+    * Host: localhost
+    * Port: 80
+    * Debugger: Xdebug
+    * Use path mapping: checked
+    * Absolute path on the server: /var/www/html
+
+![Debug button](docs/img/phpstorm_add_server.gif)
+
 2. Agregar PHP remote debug
     * Run / Debug Configurations -> PHP remote debug
-    * Utilizar servidor previamente agregado y establecer como idekey el valor `PHPTEST`
-3. Activar botón `Start listening for PHP Debug Connections`
+    * Use server created in step #1 and set idekey `PHPTEST`
+
+![Debug button](docs/img/phpstorm_add_remote_debug.gif)
+
+3. Activar botón `Start listening for PHP Debug Connections` ![Debug button](docs/img/phpstorm_enable_debug.png)
+
+### Depurar tareas de cron
+Siga los pasos anteriores, establezca una interrupción y ejecuta en el la línea de comandos:
+```bash
+docker-compose exec cron php admin/cli/cron.php
+```
+Se pueden ejecutar también [tareas específicas de cron](https://docs.moodle.org/all/es/Administraci%C3%B3n_por_l%C3%ADnea_de_comando#Trabajos_agendados)Por ejemplo:
+```bash
+docker-compose exec cron php admin/tool/task/cli/schedule_task.php --execute='\core\task\cache_cleanup_task'
+# Listar tareas
+# docker-compose exec cron php admin/tool/task/cli/schedule_task.php --list
+```
 
 ### Pgadmin4
 Pasos para usar pgadmin4
 1. Ingresar a http://localhost:5050
-2. En ```File -> Preferences -> Binary paths``` establecer en ```usr/bin```
+2. En ```File -> Preferences -> Binary paths``` establecer en ```/usr/bin```
 3. Agregar nuevo servidor:
     * Pestaña ```General```
         * Name: Un nombre para el servidor

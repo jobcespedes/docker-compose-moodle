@@ -43,7 +43,8 @@ services:
         - DOCUMENT_ROOT
         - MY_TZ
     environment:
-      - XDEBUG_CONFIG="idekey=PHPTEST"
+      - XDEBUG_CONFIG=idekey=PHPTEST
+      - PHP_IDE_CONFIG=serverName=localhost
       - DOCUMENT_ROOT
       - POSTGRES_DB
       - POSTGRES_USER
@@ -93,13 +94,6 @@ services:
       dockerfile: cron/Dockerfile
       args:
         DOCUMENT_ROOT: ${DOCUMENT_ROOT}
-    environment:
-      - XDEBUG_CONFIG="idekey=PHPTEST"
-      # Uncomment following lines and modify variable content for CUSTOM_CA 
-      # - |-
-      #   CA_CERT=-----BEGIN CERTIFICATE-----
-      #   REPLACE_CA_CONTENT
-      #   -----END CERTIFICATE-----
     volumes_from:
       - app
     depends_on:
