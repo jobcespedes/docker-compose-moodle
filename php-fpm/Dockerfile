@@ -1,4 +1,4 @@
-FROM php:7.0.31-fpm-stretch
+FROM php:7.2-fpm-stretch
 LABEL Description="Esta imagen sirve para la configuración de php-fpm para moodle" Version="1.0"
 
 ARG DOCUMENT_ROOT=/var/www/html
@@ -25,7 +25,7 @@ RUN apt-get update && \
     docker-php-ext-configure opcache --enable-opcache && docker-php-ext-install opcache
 
 # Adicionales
-RUN apt-get install -y graphviz clamav clamav-daemon zip unzip aspell-es
+RUN apt-get install -y graphviz zip unzip aspell-es
 
 # Config
 COPY php-fpm/conf/custom-php.ini /usr/local/etc/php/conf.d/php.ini
