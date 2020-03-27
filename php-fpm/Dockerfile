@@ -24,6 +24,14 @@ RUN apt-get update && \
     docker-php-ext-install soap zip intl pspell pgsql xsl && \
     docker-php-ext-configure opcache --enable-opcache && docker-php-ext-install opcache
 
+# tideways_xhprof
+RUN tideways_latest="$(basename $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/tideways/php-xhprof-extension/releases/latest))" && \
+    xhprof_url="https://github.com/tideways/php-xhprof-extension/archive/${tideways_latest}.tar.gz" && \
+    mkdir -p /usr/src/php/ext/tideways_xhprof && \
+    curl -L ${xhprof_url} | tar -xz --strip-components=1 -C /usr/src/php/ext/tideways_xhprof && \
+    docker-php-ext-configure /usr/src/php/ext/tideways_xhprof && \
+    docker-php-ext-install -j "$(nproc)" /usr/src/php/ext/tideways_xhprof
+
 # Adicionales
 RUN apt-get install -y graphviz zip unzip aspell-es
 

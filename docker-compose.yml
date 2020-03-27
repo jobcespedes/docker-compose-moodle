@@ -59,6 +59,8 @@ services:
       #   -----END CERTIFICATE-----
     volumes_from:
       - app
+    volumes:
+      - ${PWD}/log/xdebug.log:/var/log/xdebug.log
     expose:
       - "${PHP_SOCKET}"
     links:
