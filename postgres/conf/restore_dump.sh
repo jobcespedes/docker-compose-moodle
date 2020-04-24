@@ -1,5 +1,5 @@
 #!/bin/bash -e
 
-if [ -e "/opt/db_dumps/dump-init.sql.gz" ]; then
-    gunzip -c "/opt/db_dumps/dump-init.sql.gz" | psql -v ON_ERROR_STOP=1 -U ${POSTGRES_USER} ${POSTGRES_DB}
+if [ -e "/opt/db_dumps/dump-init.dump" ]; then
+    pg_restore -U ${POSTGRES_USER} -d postgres -c -C -O --role ${POSTGRES_USER} /opt/db_dumps/dump-init.dump
 fi
