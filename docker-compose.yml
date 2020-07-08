@@ -5,8 +5,8 @@ services:
   app:
     image: tianon/true
     volumes:
-      - ./${REPO_FOLDER}:${DOCUMENT_ROOT}
-      - ./moodledata:${MOODLE_DATA}
+      - ./${REPO_FOLDER}:${DOCUMENT_ROOT}:z
+      - ./moodledata:${MOODLE_DATA}:z
       # Uncomment following lines and modify path for CUSTOM_CA
       # - /usr/local/share/ca-certificates/overcloud-cacert-mo.crt:/usr/local/share/ca-certificates/custom-ca.crt
 
