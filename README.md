@@ -121,13 +121,13 @@ Debug config for IDE PHPStorm:
 ### Cron debugging
 Follow previous steps, set a breakpoint and then run:
 ```bash
-docker-compose exec cron php admin/cli/cron.php
+docker-compose exec php-fpm php admin/cli/cron.php
 ```
 There is a scrip for [Specific cron tasks](https://docs.moodle.org/35/en/Administration_via_command_line). For example:
 ```bash
-docker-compose exec cron php admin/tool/task/cli/schedule_task.php --execute='\core\task\cache_cleanup_task'
+docker-compose exec php-fpm php admin/tool/task/cli/schedule_task.php --execute='\core\task\cache_cleanup_task'
 # Listing tasks
-# docker-compose exec cron php admin/tool/task/cli/schedule_task.php --list
+# docker-compose exec php-fpm php admin/tool/task/cli/schedule_task.php --list
 ```
 
 ## Pgadmin4
@@ -266,13 +266,13 @@ Configuración para depurar con IDE PHPStorm:
 ### Depurar tareas de cron
 Siga los pasos anteriores, establezca una interrupción y ejecuta en el la línea de comandos:
 ```bash
-docker-compose exec cron php admin/cli/cron.php
+docker-compose exec php-fpm php admin/cli/cron.php
 ```
 Se pueden ejecutar también [tareas específicas de cron](https://docs.moodle.org/all/es/Administraci%C3%B3n_por_l%C3%ADnea_de_comando#Trabajos_agendados)Por ejemplo:
 ```bash
-docker-compose exec cron php admin/tool/task/cli/schedule_task.php --execute='\core\task\cache_cleanup_task'
+docker-compose exec php-fpm php admin/tool/task/cli/schedule_task.php --execute='\core\task\cache_cleanup_task'
 # Listar tareas
-# docker-compose exec cron php admin/tool/task/cli/schedule_task.php --list
+# docker-compose exec php-fpm php admin/tool/task/cli/schedule_task.php --list
 ```
 
 ### Pgadmin4
