@@ -25,7 +25,7 @@ services:
    #   - "${IP}:${PG_PORT}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./db_dumps:/opt/db_dumps
+      - ./db_dumps:/opt/db_dumps:z
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -60,7 +60,7 @@ services:
     volumes_from:
       - app
     volumes:
-      - ./log:/var/log/shared
+      - ./log:/var/log/shared:z
     expose:
       - "${PHP_SOCKET}"
     links:
@@ -109,7 +109,7 @@ services:
     links:
       - postgres
     volumes:
-      - ./db_dumps:/root
+      - ./db_dumps:/root:z
     depends_on:
       - postgres
 
