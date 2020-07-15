@@ -153,12 +153,12 @@ DB_DUMP_NAME=dump-init.$(date +"%Y%m%d%H%M%S").dump
 
 # Backup
 # -Fc  Output a custom-format archive suitable for input into pg_restore
-docker-compose_host exec postgres pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB} -Fc -f /opt/db_dumps/${DB_DUMP_NAME}
+docker-compose exec postgres pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB} -Fc -f /opt/db_dumps/${DB_DUMP_NAME}
 
 # Restore
 # -c  Clean (drop) database objects before recreating them.
 # -C  Create the database before restoring into it
-docker-compose_host exec postgres pg_restore -U ${POSTGRES_USER} -d postgres -c -C -O --role ${POSTGRES_USER} /opt/db_dumps/${DB_DUMP_NAME}
+docker-compose exec postgres pg_restore -U ${POSTGRES_USER} -d postgres -c -C -O --role ${POSTGRES_USER} /opt/db_dumps/${DB_DUMP_NAME}
 ```
 
 A database can be automatically restored when postgres service starts. By placing a dump file inside 'db_dumps' folder and naming it "dump-init.dump", postgres container will try to restore that file as an initial database if data directory is empty.
@@ -298,12 +298,12 @@ DB_DUMP_NAME=dump-init.$(date +"%Y%m%d%H%M%S").dump
 
 # Respaldar
 # -Fc  Formato personalizado para pg_restore
-docker-compose_host exec postgres pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB} -Fc -f /opt/db_dumps/${DB_DUMP_NAME}
+docker-compose exec postgres pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB} -Fc -f /opt/db_dumps/${DB_DUMP_NAME}
 
 # Restaurar
 # -c  Limpia los objetos de la base de datos antes de recrearlos
 # -C  Crea la base de datos antes de restaurarla
-docker-compose_host exec postgres pg_restore -U ${POSTGRES_USER} -d postgres -c -C -O --role ${POSTGRES_USER} /opt/db_dumps/${DB_DUMP_NAME}
+docker-compose exec postgres pg_restore -U ${POSTGRES_USER} -d postgres -c -C -O --role ${POSTGRES_USER} /opt/db_dumps/${DB_DUMP_NAME}
 ```
 
 Se puede restaurar una base de datos, usando pg_dump (formato personalizado de Posgres), a la caperta 'db_dumps' y nombrando el archivo como dump-init.dump
