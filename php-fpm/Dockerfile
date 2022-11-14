@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-stretch
+FROM php:8.1-fpm
 LABEL Description="Esta imagen sirve para la configuración de php-fpm para moodle" Version="1.0"
 
 ARG DOCUMENT_ROOT=/var/www/html
@@ -9,20 +9,17 @@ ENV WEB_MY_TZ=${MY_TZ}
 
 # PHP
 RUN apt-get update && \
-    pecl install xdebug && \
     # https://docs.moodle.org/35/en/PHP \
     apt-get install -y --no-install-recommends libxml2-dev zlib1g-dev libpng-dev \
-        libfreetype6-dev libjpeg62-turbo-dev libicu-dev libpspell-dev libpq-dev libldap2-dev libxslt-dev && \
-    docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ \
-        --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ && \
+        libfreetype6-dev libjpeg62-turbo-dev libicu-dev libpspell-dev libpq-dev libldap2-dev libxslt-dev libzip-dev && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd && \
-    docker-php-ext-configure xmlrpc --with-libxml-dir=/usr/include/ && \
-    docker-php-ext-install xmlrpc && \
     docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu && \
     docker-php-ext-install ldap && \
-    # Ya están instalados curl iconv mbstring openssl tokenizer ctype simplexml spl pcre dom xml json  \
-    docker-php-ext-install soap zip intl pspell pgsql xsl && \
-    docker-php-ext-configure opcache --enable-opcache && docker-php-ext-install opcache
+    # Ya están instalados curl iconv mbstring openssl tokenizer ctype simplexml spl pcre dom xml json sodium \
+    docker-php-ext-install soap zip intl pspell pgsql xsl exif && \
+    docker-php-ext-configure opcache --enable-opcache && docker-php-ext-install opcache && \
+    pecl install xdebug xmlrpc-beta
 
 # tideways_xhprof
 RUN tideways_latest="$(basename $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/tideways/php-xhprof-extension/releases/latest))" && \
@@ -36,15 +33,15 @@ RUN tideways_latest="$(basename $(curl -Ls -o /dev/null -w %{url_effective} http
 RUN apt-get install -y graphviz zip unzip aspell-es
 
 # Config
-COPY php-fpm/conf/custom-php.ini /usr/local/etc/php/conf.d/php.ini
-COPY php-fpm/conf/custom-xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
-COPY php-fpm/conf/custom-opcache.ini /usr/local/etc/php/conf.d/opcache.ini
-COPY php-fpm/conf/php-fpm-xdebug-entrypoint.sh /usr/local/bin/php-fpm-xdebug-entrypoint
+COPY conf/custom-php.ini /usr/local/etc/php/conf.d/php.ini
+COPY conf/custom-xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY conf/custom-opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY conf/php-fpm-xdebug-entrypoint.sh /usr/local/bin/php-fpm-xdebug-entrypoint
 
 # TZ
 RUN echo "${WEB_MY_TZ}" > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
-    sed -i  "s@MY_TZ_WILL_BE_REPLACE@${WEB_MY_TZ}@" /usr/local/etc/php/conf.d/xdebug.ini
+    sed -i  "s@MY_TZ_WILL_BE_REPLACE@${WEB_MY_TZ}@" /usr/local/etc/php/conf.d/php.ini
 
 # Limpieza
 RUN apt-get clean && \

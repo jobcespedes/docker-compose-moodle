@@ -1,4 +1,4 @@
-FROM metics/php-fpm:7
+FROM moodledev/php:8.1-fpm
 LABEL Description="Esta imagen sirve para la configuración del cron de moodle" Version="1.0"
 
 ARG DOCUMENT_ROOT=/var/www/html
@@ -8,8 +8,8 @@ ENV WEB_DOCUMENT_ROOT=$DOCUMENT_ROOT
 RUN apt-get update && apt-get install --no-install-recommends -y cron inetutils-syslogd supervisor
 
 # Archivos cron
-ADD ./cron/conf/cron_moodle_entry /etc/cron.d/moodle
-ADD cron/conf/supervisor.conf /etc/supervisor/conf.d/supervisor_cron.conf
+ADD conf/cron_moodle_entry /etc/cron.d/moodle
+ADD conf/supervisor.conf /etc/supervisor/conf.d/supervisor_cron.conf
 
 RUN sed -i "s@DOCROOT@${WEB_DOCUMENT_ROOT}@" /etc/cron.d/moodle && \
     chmod 0644 /etc/cron.d/moodle && \

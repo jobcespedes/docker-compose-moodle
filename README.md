@@ -15,7 +15,7 @@ This project quickly builds a local workspace for Moodle  (Apache2, PHP-FPM with
 1. Install Docker. Check out how to install [Docker](https://docs.docker.com/install/)
 2. Install Docker Compose. Check out how to install [Docker Compose](https://docs.docker.com/compose/install/)
 3. Download this repo: `git clone https://github.com/jobcespedes/docker-compose-moodle.git && cd docker-compose-moodle`
-4. Clone Moodle repo: `git clone --branch MOODLE_35_STABLE --depth 1 git://github.com/moodle/moodle html`
+4. Clone Moodle repo: `git clone --branch MOODLE_41_STABLE --depth 1 https://github.com/moodle/moodle html`
 5. Run with: `docker-compose up -d`
 
 ## Contents
@@ -118,6 +118,9 @@ Debug config for IDE PHPStorm:
 
 3. Enable `Start listening for PHP Debug Connections` ![Debug button](docs/img/phpstorm_enable_debug.png)
 
+#### VSCode
+Debug config for IDE VSCode [here](.vscode/launch.json)
+
 ### Cron debugging
 Follow previous steps, set a breakpoint and then run:
 ```bash
@@ -171,7 +174,7 @@ Este es un repositorio para crear rápidamente un entorno de trabajo con Moodle 
 1. Tener Docker. Ver como instalar [Docker](https://docs.docker.com/install/)
 2. Tener Docker Compose. Ver como instalar [Docker Compose](https://docs.docker.com/compose/install/)
 3. Descargar este repo y acceder a él: ```git clone https://github.com/jobcespedes/docker-compose-moodle.git && cd docker-compose-moodle```
-4. Copiar repositorio de código de Moodle: ```git clone --branch MOODLE_35_STABLE --depth 1 git://github.com/moodle/moodle html```
+4. Copiar repositorio de código de Moodle: ```git clone --branch MOODLE_41_STABLE --depth 1 https://github.com/moodle/moodle html```
 5. Desplegar con: ```docker-compose up -d```
 
 ## Variables de ambiente

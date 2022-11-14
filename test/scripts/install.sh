@@ -4,6 +4,6 @@
 # Fail if one of the commands of this script fails
 set -e
 
-git clone --branch MOODLE_35_STABLE --depth 1 git://github.com/moodle/moodle html
+git clone --branch MOODLE_41_STABLE --depth 1 https://github.com/moodle/moodle html
 
 set +e
