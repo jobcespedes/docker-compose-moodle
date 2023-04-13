@@ -14,4 +14,4 @@ RUN localedef -i ${locale} -c -f UTF-8 -A /usr/share/locale/locale.alias ${local
 RUN echo "${WEB_MY_TZ}" > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata
 
-COPY postgres/conf/restore_dump.sh /docker-entrypoint-initdb.d/restore_dump.sh
+COPY conf/restore_dump.sh /docker-entrypoint-initdb.d/restore_dump.sh
