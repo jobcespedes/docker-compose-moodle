@@ -14,7 +14,7 @@ RUN apt-get update && \
         libfreetype6-dev libjpeg62-turbo-dev libicu-dev libpspell-dev libpq-dev libldap2-dev libxslt-dev libzip-dev && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd && \
-    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu && \
+    docker-php-ext-configure ldap --with-libdir=lib/$(uname -m)-linux-gnu && \
     docker-php-ext-install ldap && \
     # Ya están instalados curl iconv mbstring openssl tokenizer ctype simplexml spl pcre dom xml json sodium \
     docker-php-ext-install soap zip intl pspell pgsql xsl exif && \
