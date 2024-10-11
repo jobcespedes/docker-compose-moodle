@@ -1,48 +1,43 @@
-version: '2.1'
-
 services:
-  # Aplicación
-  app:
-    image: tianon/true
-    volumes:
-      - ./${REPO_FOLDER}:${DOCUMENT_ROOT}:z
-      - ./moodledata:${MOODLE_DATA}:z
-      # Uncomment following lines and modify path for CUSTOM_CA
-      # - /usr/local/share/ca-certificates/overcloud-cacert-mo.crt:/usr/local/share/ca-certificates/custom-ca.crt
-
   # Servicio de postgres:
   postgres:
-    image: "moodledev/postgres:13-${PG_LOCALE}"
+    image: "moodledev/postgres:${POSTGRES_VERSION_TAG}-${PG_LOCALE}"
     build:
       context: ./postgres
       args:
-        locale: "${PG_LOCALE}"
+        ARG_POSTGRES_IMAGE_FROM: quay.io/krestomatio/postgres:${POSTGRES_VERSION_TAG}
+        POSTGRES_UID: ${UID:-1000}
+        MY_TZ: ${MY_TZ}
     expose:
       - "${PG_PORT}"
    # Uncomment following lines to expose postgres to host network
    # ports:
    #   - "${IP}:${PG_PORT}:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
       - ./db_dumps:/opt/db_dumps:z
     environment:
-      POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-    depends_on:
-      - app
+      POSTGRES_PORT: "${PG_PORT}"
+      POSTGRESQL_DATABASE: "${POSTGRES_DB}"
+      POSTGRESQL_USER: "${POSTGRES_USER}"
+      POSTGRESQL_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRESQL_ADMIN_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRESQL_LOG_STDERR: true
 
   # Servicio de PHP-FPM
   php-fpm:
-    image: "moodledev/php:8.1-fpm"
+    image: "moodledev/php:${PHP_VERSION_TAG}"
     build:
       context: ./php-fpm
       args:
-        - DOCUMENT_ROOT
-        - MY_TZ
+        ARG_PHP_FPM_IMAGE_FROM: docker.io/php:${PHP_VERSION_TAG}
+        PHP_UID: ${UID:-1000}
+        MY_TZ: ${MY_TZ}
+        DOCUMENT_ROOT: ${DOCUMENT_ROOT}
     environment:
       - XDEBUG_CONFIG=idekey=PHPTEST
       - PHP_IDE_CONFIG=serverName=localhost
+      - PHP_FPM_PORT
       - DOCUMENT_ROOT
       - POSTGRES_DB
       - POSTGRES_USER
@@ -50,35 +45,47 @@ services:
       - MOODLE_DATA
       - WWWROOT
       - WWW_PORT
+      - MOODLE_INSTALL_UNATTENDED
+      - MOODLE_INSTALL_LANG
+      - MOODLE_INSTALL_FULLNAME
+      - MOODLE_INSTALL_SHORTNAME
+      - MOODLE_INSTALL_SUMMARY
+      - MOODLE_INSTALL_USER
+      - MOODLE_INSTALL_PASS
+      - MOODLE_INSTALL_EMAIL
       # Uncomment following lines and modify variable content for CUSTOM_CA
       # - |-
       #   CA_CERT=-----BEGIN CERTIFICATE-----
       #   REPLACE_CA_CONTENT
       #   -----END CERTIFICATE-----
-    volumes_from:
-      - app
     volumes:
+      - ./${REPO_FOLDER}:${DOCUMENT_ROOT}:z
+      - ./moodledata:${MOODLE_DATA}:z
       - ./log:/var/log/shared:z
     expose:
-      - "${PHP_SOCKET}"
+      - "${PHP_FPM_PORT}"
     links:
       - postgres
     depends_on:
       - postgres
 
-  # Servicio de Apache2
-  apache2:
-    image: moodledev/apache2:2.4
+  # Servicio de nginx
+  nginx:
+    image: moodledev/nginx:${NGINX_VERSION_TAG}
     build:
-      context: ./apache2
+      context: ./nginx
       args:
-        DOCUMENT_ROOT: ${DOCUMENT_ROOT}
-        PHP_SOCKET: php-fpm:${PHP_SOCKET}
-        ALIAS_DOMAIN: ${ALIAS_DOMAIN}
-    volumes_from:
-      - app
+        ARG_NGINX_IMAGE_FROM: quay.io/krestomatio/nginx:${NGINX_VERSION_TAG}
+        NGINX_UID: ${UID:-1000}
+    volumes:
+      - ./${REPO_FOLDER}:${DOCUMENT_ROOT}:z
+      - ./moodledata:${MOODLE_DATA}:z
     ports:
-      - "${IP}:${WWW_PORT}:80"
+      - "${IP}:${WWW_PORT}:8080"
+    environment:
+      NGINX_DOCUMENTROOT: ${DOCUMENT_ROOT}
+      NGINX_FASTCGI_PASS: php-fpm:${PHP_FPM_PORT}
+      NGINX_PORT: ${WWW_PORT}
     links:
       - php-fpm
       - postgres
@@ -87,19 +94,21 @@ services:
 
   # Cron para moodle
   cron:
-    image: moodledev/php:8.1-fpm-cron
+    image: moodledev/php:${PHP_VERSION_TAG}-cron
     build:
       context: ./cron
       args:
+        ARG_CRON_IMAGE_FROM: "moodledev/php:${PHP_VERSION_TAG}"
         DOCUMENT_ROOT: ${DOCUMENT_ROOT}
-    volumes_from:
-      - app
+    volumes:
+      - ./${REPO_FOLDER}:${DOCUMENT_ROOT}:z
+      - ./moodledata:${MOODLE_DATA}:z
     depends_on:
-      - apache2
+      - nginx
 
  # Gestor de base de datos
   pgadmin:
-    image: "foxylion/pgadmin4"
+    image: "docker.io/foxylion/pgadmin4"
     ports:
       - "${IP}:5050:80"
     links:
@@ -110,5 +119,5 @@ services:
       - postgres
 
 volumes:
-  postgres-data:
+  postgres_data:
     driver: "local"

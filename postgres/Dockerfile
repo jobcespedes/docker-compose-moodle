@@ -1,17 +1,23 @@
-FROM postgres:13
-LABEL Description="Esta imagen sirve para la configuración de la capa de base de datos" Version="1.0"
+ARG ARG_POSTGRES_IMAGE_FROM
+FROM ${ARG_POSTGRES_IMAGE_FROM}
 
-ARG locale=es_CR
+ARG POSTGRES_UID=1000
 ARG MY_TZ=America/Costa_Rica
 
-ENV LANG ${locale}.utf8
-ENV WEB_MY_TZ=${MY_TZ}
+ENV CTR_USER_ID=${POSTGRES_UID}
+ENV TZ=${MY_TZ}
 
-# Locale
-RUN localedef -i ${locale} -c -f UTF-8 -A /usr/share/locale/locale.alias ${locale}.UTF-8
+USER 0
 
-# TZ
-RUN echo "${WEB_MY_TZ}" > /etc/timezone && \
-    dpkg-reconfigure -f noninteractive tzdata
+COPY conf/container-entrypoint.d ${CTR_ENTRYPOINT_OPT_PATH}/
 
-COPY conf/restore_dump.sh /docker-entrypoint-initdb.d/restore_dump.sh
+RUN container-setup
+
+RUN container-setup-postgres
+
+USER ${CTR_USER_ID}
+
+EXPOSE $POSTGRES_PORT
+
+LABEL Description="This image is used for the configuration of the database layer" \
+      Version="1.0"

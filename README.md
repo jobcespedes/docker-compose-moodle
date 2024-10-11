@@ -1,15 +1,14 @@
 # docker-compose-moodle
-[![Build Status](https://travis-ci.org/jobcespedes/docker-compose-moodle.svg?branch=master)](https://travis-ci.org/jobcespedes/docker-compose-moodle)
-![Moodle](https://img.shields.io/badge/Moodle-3.5-blue.svg?colorB=f98012)
-![Apache2](https://img.shields.io/badge/Apache2-2.4-blue.svg?colorB=557697)
-![PHP](https://img.shields.io/badge/PHP-7-blue.svg?colorB=8892BF)
-![Postgres](https://img.shields.io/badge/Postgres-9.6-blue.svg?colorB=0085B0)
+![Moodle](https://img.shields.io/badge/Moodle-4.5-blue.svg?colorB=f98012)
+![Nginx](https://img.shields.io/badge/Nginx-1.20-blue.svg?colorB=557697)
+![PHP](https://img.shields.io/badge/PHP-8-blue.svg?colorB=8892BF)
+![Postgres](https://img.shields.io/badge/Postgres-13-blue.svg?colorB=0085B0)
 [![Buy me a coffee](https://img.shields.io/badge/$-BuyMeACoffee-blue.svg)](https://www.buymeacoffee.com/jobcespedes)
 [![Software License](https://img.shields.io/badge/License-APACHE-black.svg?style=flat-square&colorB=585ac2)](LICENSE)
 
 >Leer en [**Español**](#español)
 
-This project quickly builds a local workspace for Moodle  (Apache2, PHP-FPM with XDEBUG y Postgres) using containers for each of its main components. The local workspace is built and managed by Docker Compose
+This project quickly builds a local workspace for Moodle  (Nginx, PHP-FPM with XDEBUG y Postgres) using containers for each of its main components. The local workspace is built and managed by Docker Compose
 
 ## Quickstart:
 1. Install Docker. Check out how to install [Docker](https://docs.docker.com/install/)
@@ -42,23 +41,24 @@ The following table describes environment variables set in [**.env**](.env). The
 | **POSTGRES_DB**       | moodle             | Postgres DB for Moodle                                                   |
 | **POSTGRES_USER**     | user               | DB user for Moodle                                                       |
 | **POSTGRES_PASSWORD** | password           | DB password for Moodle                                                   |
-| **PHP_SOCKET**        | 9000               | PHP-FPM socket to connect apache2  and php-fpm services                  |
+| **PHP_FPM_PORT**      | 9000               | PHP-FPM port to connect nginx and php-fpm services                  |
 | **ALIAS_DOMAIN**      | localhost          | Domain Alias                                                             |
 | **WWW_PORT**          | 80                 | Web port to be bound                                                     |
 | **MOODLE_DATA**       | /var/moodledata    | Mount point inside containers for Moodle data folder                     |
 | **WWWROOT**           | localhost          | Host part to set in Moodle file 'config.php' for config option 'wwwroot' |
+| **MOODLE_INSTALL_UNATTENDED** | true        | Moodle unattended installation                                           |
 
 ## Docker Compose resources
 The following table sums up Docker Compose resources.
 
 | Component         | Type      | Responsability          | Content                      | Config                                                                                                                                                                                                 |
 | :---------------- | :-------- | :---------------------- | :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **apache2**       | Container | Web server              | Debian9, Apache2             | [Apache2](http://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-apache.html#web-environment-variables) server and [modules for Moodle](https://docs.moodle.org/35/en/Apache) |
-| **cron**          | Container | Cron task for Moodle    | Debian9, Cron                | [Moodle cron task](https://docs.moodle.org/35/en/Cron) and its frequency                                                                                                                               |
+| **nginx**       | Container | Web server              | Centos Stream 9, Nginx             | [Nginx](https://quay.io/repository/krestomatio/nginx?tab=info) server for [Moodle](https://docs.moodle.org/405/en/Nginx) |
+| **cron**          | Container | Cron task for Moodle    | Debian9, Cron                | [Moodle cron task](https://docs.moodle.org/405/en/Cron) and its frequency                                                                                                                               |
 | **php-fpm**       | Container | Process manager for PHP | Debian9, PHP-FPM, XDEBUG     | PHP, its modules and Moodle dependencies                                                                                                                                                               |
-| **postgres**      | Container | DBMS                    | Debian9, Postgres            | [User and DB](https://hub.docker.com/_/postgres/)                                                                                                                                                      |
+| **postgres**      | Container | DBMS                    | Centos Stream 9, Postgres            | [User and DB](https://hub.docker.com/_/postgres/)                                                                                                                                                      |
 | **db_dumps**      | Volume    | Restore db when built   | Dump files for DB to restore | To restore an initial database if you start the container with a data directory that is empty. File name should be "dump-init.dump"                                                                    |
-| **moodledata**    | Volume    | Moodle data store       | Data generated by moodle     | [Moodle data dir ](https://docs.moodle.org/35/en/Installing_Moodle#Create_the_.28moodledata.29_data_directory)                                                                                         |
+| **moodledata**    | Volume    | Moodle data store       | Data generated by moodle     | [Moodle data dir ](https://docs.moodle.org/405/en/Installing_Moodle#Create_the_.28moodledata.29_data_directory)                                                                                         |
 | ***REPO_FOLDER*** | Volume    | Moodle code             | Moodle code                  | It is set to 'html/' by deafult (check out [**.env**](.env))                                                                                                                                           |
 
 ## Project management with Docker Compose
@@ -126,7 +126,7 @@ Follow previous steps, set a breakpoint and then run:
 ```bash
 docker-compose exec php-fpm php admin/cli/cron.php
 ```
-There is a scrip for [Specific cron tasks](https://docs.moodle.org/35/en/Administration_via_command_line). For example:
+There is a scrip for [Specific cron tasks](https://docs.moodle.org/405/en/Administration_via_command_line). For example:
 ```bash
 docker-compose exec php-fpm php admin/tool/task/cli/schedule_task.php --execute='\core\task\cache_cleanup_task'
 # Listing tasks
@@ -168,7 +168,7 @@ A database can be automatically restored when postgres service starts. By placin
 > **IMPORTANT**: Depending of  size, database initial availability could be delayed
 
 # Español
-Este es un repositorio para crear rápidamente un entorno de trabajo con Moodle (Apache2, PHP-FPM con XDEBUG y Postgres) usando contenedores para cada uno sus principales componentes. El entorno de trabajo se crea y gestiona con Docker Compose.
+Este es un repositorio para crear rápidamente un entorno de trabajo con Moodle (Nginx, PHP-FPM con XDEBUG y Postgres) usando contenedores para cada uno sus principales componentes. El entorno de trabajo se crea y gestiona con Docker Compose.
 
 ## Pasos rápidos para crear proyecto:
 1. Tener Docker. Ver como instalar [Docker](https://docs.docker.com/install/)
@@ -190,21 +190,22 @@ La siguiente tabla contiene las variables utilizadas en el archivo [**.env**](.e
 | **POSTGRES_DB**       | moodle             | Nombre de la base de datos postgres de Moodle                |
 | **POSTGRES_USER**     | user               | Nombre de usuario de la base de datos postgres de Moodle     |
 | **POSTGRES_PASSWORD** | password           | Contraseña de la base de datos postgres de Moodle            |
-| **PHP_SOCKET**        | 9000               | Socket para conectar apache2 con php-fpm                     |
+| **PHP_FPM_PORT**          | 9000               | Puerto para conectar nginx con php-fpm                     |
 | **ALIAS_DOMAIN**      | localhost          | Alias del Dominio                                            |
 | **WWW_PORT**          | 80                 | Puerto web a publicar                                        |
 | **MOODLE_DATA**       | /var/moodledata    | Carpeta de datos de Moodle a montar en los contenedores      |
 | **WWWROOT**           | localhost          | Para de nombre de host en la url de config.php de Moodle     |
+| **MOODLE_INSTALL_UNATTENDED** | true        | Instalación de Moodle sin intervención del usuario           |
 
 ## Estructura de Docker Compose
 A continuación se incluye una tabla que resume la estructura del archivo de Docker Compose:
 
 | Componente        | Tipo       | Responsabilidad                             | Contenido                              | Configuración                                                                                                                                            |
 | :---------------- | :--------- | :------------------------------------------ | :------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **apache2**       | Contenedor | Servidor web                                | Debian9, Apache2                       | El mínimo de módulos de [Apache2](http://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-apache.html#web-environment-variables) |
-| **cron**          | Contenedor | Tarea de cron de Moodle                     | Debian9, Cron                          | Frecuencia de ejecución de tarea [cron de Moodle](https://docs.moodle.org/35/es/Cron)                                                                    |
+| **nginx**       | Contenedor | Servidor web                                | Centos Stream, Nginx                       | Servidor [Nginx](https://quay.io/repository/krestomatio/nginx?tab=info) para [Moodle](https://docs.moodle.org/405/es/Nginx) |
+| **cron**          | Contenedor | Tarea de cron de Moodle                     | Debian9, Cron                          | Frecuencia de ejecución de tarea [cron de Moodle](https://docs.moodle.org/405/es/Cron)                                                                    |
 | **php-fpm**       | Contenedor | Interprete y manejador de procesos para PHP | Debian9, PHP-FPM, XDEBUG               | Modulos de php y paquetes adicionales para Moodle                                                                                                        |
-| **postgres**      | Contenedor | Gestor de base de datos                     | Debian9, Postgres                      | [Usuario y base de datos](https://hub.docker.com/_/postgres/)                                                                                            |
+| **postgres**      | Contenedor | Gestor de base de datos                     | Centos Stream, Postgres                      | [Usuario y base de datos](https://hub.docker.com/_/postgres/)                                                                                            |
 | **db_dumps**      | Volumen    | Restaurar una base de datos inicial         | Archivos de respaldo de base de datos. | Para restaurar al iniciar si se comienza con directorio de datos vacío. El nombre del archivo de respaldo a utilizar debe ser "dump-init.dump"           |
 | **moodledata**    | Volumen    | Almacén de datos de Moodle                  | Archivos generados por Moodle          | [Moodle data dir ](https://docs.moodle.org/all/es/Gu%C3%ADa_r%C3%A1pida_de_Instalaci%C3%B3n#Crea_el_directorio_de_datos)                                 |
 | ***REPO_FOLDER*** | Volumen    | Código de aplicación                        | Código de Moodle                       | Por defecto es './html' (ver archivo .env)                                                                                                               |

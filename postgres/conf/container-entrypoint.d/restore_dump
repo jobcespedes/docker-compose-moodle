@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+if [ -e "/opt/db_dumps/dump-init.dump" ]; then
+    pg_restore -U ${POSTGRESQL_USER} -d postgres -c -C -O --role ${POSTGRESQL_USER} /opt/db_dumps/dump-init.dump
+fi
