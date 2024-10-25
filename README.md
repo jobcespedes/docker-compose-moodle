@@ -128,9 +128,9 @@ docker-compose exec php-fpm php admin/cli/cron.php
 ```
 There is a scrip for [Specific cron tasks](https://docs.moodle.org/405/en/Administration_via_command_line). For example:
 ```bash
-docker-compose exec php-fpm php admin/tool/task/cli/schedule_task.php --execute='\core\task\cache_cleanup_task'
+docker-compose exec php-fpm php admin/cli/scheduled_task.php --execute='\core\task\cache_cleanup_task'
 # Listing tasks
-# docker-compose exec php-fpm php admin/tool/task/cli/schedule_task.php --list
+# docker-compose exec php-fpm php admin/cli/scheduled_task.php --list
 ```
 
 ## Pgadmin4
@@ -274,9 +274,9 @@ docker-compose exec php-fpm php admin/cli/cron.php
 ```
 Se pueden ejecutar también [tareas específicas de cron](https://docs.moodle.org/all/es/Administraci%C3%B3n_por_l%C3%ADnea_de_comando#Trabajos_agendados)Por ejemplo:
 ```bash
-docker-compose exec php-fpm php admin/tool/task/cli/schedule_task.php --execute='\core\task\cache_cleanup_task'
+docker-compose exec php-fpm php admin/cli/scheduled_task.php --execute='\core\task\cache_cleanup_task'
 # Listar tareas
-# docker-compose exec php-fpm php admin/tool/task/cli/schedule_task.php --list
+# docker-compose exec php-fpm php admin/cli/scheduled_task.php --list
 ```
 
 ### Pgadmin4
