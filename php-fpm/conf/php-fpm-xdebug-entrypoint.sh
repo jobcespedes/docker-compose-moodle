@@ -54,6 +54,12 @@ if [ "$MOODLE_INSTALL_UNATTENDED" == "true" ]; then
       echo "Install check exit code: $install_check_exit_code"
       retries=$((retries - 1))
     done
+
+    if [ "$install_check_exit_code" != "0" ] && [ "$install_check_exit_code" != "2" ]; then
+      echo "Timeout waiting for database to be ready"
+      echo "Last install check exit code: $install_check_exit_code"
+      exit 1
+    fi
   fi
 
   if [ "$install_check_exit_code" == "2" ]; then
