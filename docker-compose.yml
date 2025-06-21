@@ -108,16 +108,22 @@ services:
 
  # Gestor de base de datos
   pgadmin:
-    image: "docker.io/foxylion/pgadmin4"
+    image: "docker.io/elestio/pgadmin"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL
+      - PGADMIN_DEFAULT_PASSWORD
     ports:
       - "${IP}:5050:80"
     links:
       - postgres
     volumes:
+      - pgadmin_data:/pgadmin4
       - ./db_dumps:/root:z
     depends_on:
       - postgres
 
 volumes:
   postgres_data:
+    driver: "local"
+  pgadmin_data:
     driver: "local"
