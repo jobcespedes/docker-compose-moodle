@@ -4,7 +4,7 @@ check_database_installed() {
     # check database is installed
     # code exit 2 means database scheme not installed
     set -e
-    MOODLE_APP=${DOCUMENT_ROOT}
+    export MOODLE_APP=${DOCUMENT_ROOT}
     php <<'CODE'
 <?php
 define('CLI_SCRIPT', true);
