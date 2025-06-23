@@ -33,7 +33,7 @@ if [ "$MOODLE_INSTALL_UNATTENDED" == "true" ]; then
       host_port="${WWWROOT}:${WWW_PORT}"
   fi
 
-  cp -p ${DOCUMENT_ROOT}/config-dist.php ${DOCUMENT_ROOT}/config.php
+  [ -f ${DOCUMENT_ROOT}/config.php ] || cp -p ${DOCUMENT_ROOT}/config-dist.php ${DOCUMENT_ROOT}/config.php
   sed -i \
       -e  "s@^\$CFG->dbhost.*@\$CFG->dbhost    = 'postgres';@" \
       -e  "s@^\$CFG->dbname.*@\$CFG->dbname    = '${POSTGRES_DB}';@" \
