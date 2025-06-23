@@ -9,6 +9,7 @@ check_database_installed() {
 <?php
 define('CLI_SCRIPT', true);
 define('NO_UPGRADE_CHECK', true);
+define('CACHE_DISABLE_ALL', true); // This prevents reading of existing caches.
 $MOODLE_APP = getenv('MOODLE_APP') ?: '/var/www/html';
 require($MOODLE_APP . '/config.php');
 if (!empty($CFG->upgraderunning)) {
