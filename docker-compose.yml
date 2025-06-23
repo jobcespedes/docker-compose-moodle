@@ -10,9 +10,9 @@ services:
         MY_TZ: ${MY_TZ}
     expose:
       - "${PG_PORT}"
-   # Uncomment following lines to expose postgres to host network
-   # ports:
-   #   - "${IP}:${PG_PORT}:5432"
+    # Uncomment following lines to expose postgres to host network
+    # ports:
+    #   - "${IP}:${PG_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./db_dumps:/opt/db_dumps:z
@@ -22,7 +22,7 @@ services:
       POSTGRESQL_USER: "${POSTGRES_USER}"
       POSTGRESQL_PASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRESQL_ADMIN_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRESQL_LOG_STDERR: true
+      POSTGRESQL_LOG_DESTINATION: "${POSTGRESQL_LOG_DESTINATION:-/dev/stderr}"
 
   # Servicio de PHP-FPM
   php-fpm:

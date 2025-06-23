@@ -6,7 +6,7 @@ if ! [ -f ${NGINX_DEFAULT_CONF_ROOT_FILE} ]; then
     cat << "EOF" > ${NGINX_DEFAULT_CONF_ROOT_FILE}
 location / {
     index index.php index.html index.htm;
-    try_files $uri $uri/ /index.php;
+    try_files $uri $uri/ /index.php /r.php;
 }
 EOF
 fi
