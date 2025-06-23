@@ -109,6 +109,8 @@ services:
  # Gestor de base de datos
   pgadmin:
     image: "docker.io/elestio/pgadmin"
+    profiles:
+      - all
     environment:
       - PGADMIN_DEFAULT_EMAIL
       - PGADMIN_DEFAULT_PASSWORD
