@@ -51,7 +51,7 @@ if [ "$MOODLE_INSTALL_UNATTENDED" == "true" ]; then
     until [ "$retries" -le 0 ] || [ -z "$install_check_exit_code" ] || [ "$install_check_exit_code" == "0" ] || [ "$install_check_exit_code" == "2" ]; do
       echo "Waiting for database to be ready: $retries retries left"
       sleep 2
-      install_check_exit_code=$(check_database_installed &>/dev/null || echo $?)
+      install_check_exit_code=$(check_database_installed || echo $?)
       echo "Install check exit code: $install_check_exit_code"
       retries=$((retries - 1))
     done
