@@ -3,8 +3,8 @@
 check_database_installed() {
     # check database is installed
     # code exit 2 means database scheme not installed
-    set -e
     export MOODLE_APP=${DOCUMENT_ROOT}
+    set +e
     php <<'CODE'
 <?php
 define('CLI_SCRIPT', true);
@@ -22,6 +22,9 @@ if (empty($CFG->version)) {
 }
 ?>
 CODE
+  install_check_exit_code=$?
+  set -e
+  echo "Install check exit code: $install_check_exit_code"
 }
 
 # Moodle
@@ -44,15 +47,13 @@ if [ "$MOODLE_INSTALL_UNATTENDED" == "true" ]; then
       ${DOCUMENT_ROOT}/config.php
 
 
-  install_check_exit_code=$(check_database_installed &>/dev/null || echo $?)
-  echo "Install check exit code: $install_check_exit_code"
+  check_database_installed &>/dev/null
   if [ -n "$install_check_exit_code" ] && [ "$install_check_exit_code" != "0" ] && [ "$install_check_exit_code" != "2" ]; then
     retries=10
     while [ "$retries" -gt 0 ] && [ -n "$install_check_exit_code" ] && [ "$install_check_exit_code" != "0" ] && [ "$install_check_exit_code" != "2" ]; do
       echo "Waiting for database to be ready: $retries retries left"
       sleep 2
-      install_check_exit_code=$(check_database_installed || echo $?)
-      echo "Install check exit code: $install_check_exit_code"
+      check_database_installed
       retries=$((retries - 1))
     done
 
