@@ -88,7 +88,6 @@ services:
       NGINX_PORT: ${WWW_PORT}
     links:
       - php-fpm
-      - postgres
     depends_on:
       - php-fpm
 
